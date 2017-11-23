@@ -1,4 +1,4 @@
-package com.jarvis;
+package com.jarvis.speech;
 
 import android.widget.Toast;
 
@@ -10,9 +10,9 @@ import edu.cmu.pocketsphinx.RecognitionListener;
  */
 
 public class PocketSphinxRecognitionListener implements RecognitionListener {
-    private SpeechRecognizerManager mSpeechRecognizerManager;
+    private SpeechManager mSpeechRecognizerManager;
 
-    public PocketSphinxRecognitionListener(SpeechRecognizerManager speechRecognizerManager) {
+    public PocketSphinxRecognitionListener(SpeechManager speechRecognizerManager) {
         this.mSpeechRecognizerManager = speechRecognizerManager;
     }
 
@@ -32,8 +32,7 @@ public class PocketSphinxRecognitionListener implements RecognitionListener {
             return;
 
         String text = hypothesis.getHypstr();
-        if (text.contains(SpeechRecognizerManager.KEYPHRASE)) {
-            Toast.makeText(mSpeechRecognizerManager.getmContext(),"You said:"+text, Toast.LENGTH_SHORT).show();
+        if (text.contains(SpeechManager.KEYPHRASE)) {
             mSpeechRecognizerManager.startDialogFlowRecognition();
             mSpeechRecognizerManager.getmPocketSphinxRecognizer().cancel();
         }

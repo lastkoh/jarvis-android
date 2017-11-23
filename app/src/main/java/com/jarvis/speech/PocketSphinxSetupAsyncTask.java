@@ -1,8 +1,7 @@
-package com.jarvis;
+package com.jarvis.speech;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +15,9 @@ import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
 public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception> {
     private static final String TAG = PocketSphinxSetupAsyncTask.class.getSimpleName();
-    private final SpeechRecognizerManager mSpeechRecognizerManager;
+    private final SpeechManager mSpeechRecognizerManager;
 
-    public PocketSphinxSetupAsyncTask(SpeechRecognizerManager mSpeechRecognizerManager){
+    public PocketSphinxSetupAsyncTask(SpeechManager mSpeechRecognizerManager){
         this.mSpeechRecognizerManager = mSpeechRecognizerManager;
     }
 
@@ -45,8 +44,8 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
 
             // Create keyword-activation search.
             mSpeechRecognizerManager.getmPocketSphinxRecognizer().addKeyphraseSearch(
-                    SpeechRecognizerManager.KWS_SEARCH,
-                    SpeechRecognizerManager.KEYPHRASE);
+                    SpeechManager.KWS_SEARCH,
+                    SpeechManager.KEYPHRASE);
 
             mSpeechRecognizerManager.getmPocketSphinxRecognizer()
                     .addListener(new PocketSphinxRecognitionListener(mSpeechRecognizerManager));
@@ -60,9 +59,9 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
     protected void onPostExecute(Exception result) {
         if (result != null) {
             Log.i(TAG,result.getMessage());
-            Toast.makeText(mSpeechRecognizerManager.getmContext(), "Failed to start pocketSphinxRecognizer ", Toast.LENGTH_SHORT).show();
         } else {
-            mSpeechRecognizerManager.restartSearch(SpeechRecognizerManager.KWS_SEARCH);
+            mSpeechRecognizerManager.getmPocketSphinxRecognizer().stop();
+            mSpeechRecognizerManager.getmPocketSphinxRecognizer().startListening(SpeechManager.KWS_SEARCH);
         }
     }
 }

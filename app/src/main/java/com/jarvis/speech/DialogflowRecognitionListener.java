@@ -1,7 +1,6 @@
-package com.jarvis;
+package com.jarvis.speech;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import ai.api.AIListener;
 import ai.api.model.AIError;
@@ -15,9 +14,9 @@ import ai.api.model.Result;
 public class DialogflowRecognitionListener implements AIListener {
     private static  final String TAG = DialogflowRecognitionListener.class.getSimpleName();
 
-    private SpeechRecognizerManager mSpeechRecognizerManager;
+    private SpeechManager mSpeechRecognizerManager;
 
-    public DialogflowRecognitionListener(SpeechRecognizerManager speechRecognizerManager){
+    public DialogflowRecognitionListener(SpeechManager speechRecognizerManager){
         this.mSpeechRecognizerManager = speechRecognizerManager;
     }
 
@@ -25,17 +24,16 @@ public class DialogflowRecognitionListener implements AIListener {
     public void onResult(AIResponse result) {
         Result returnResult = result.getResult();
         String speech = returnResult.getFulfillment().getSpeech();
-        Toast.makeText(mSpeechRecognizerManager.getmContext(),"Response: " + speech
-                , Toast.LENGTH_SHORT).show();
+        mSpeechRecognizerManager.speak(speech);
         mSpeechRecognizerManager.getmPocketSphinxRecognizer()
-                .startListening(SpeechRecognizerManager.KWS_SEARCH);
+                .startListening(SpeechManager.KWS_SEARCH);
     }
 
     @Override
     public void onError(AIError error) {
         Log.i(TAG, "Dialogflow onError: " + error.getMessage());
         mSpeechRecognizerManager.getmPocketSphinxRecognizer()
-                .startListening(SpeechRecognizerManager.KWS_SEARCH);
+                .startListening(SpeechManager.KWS_SEARCH);
     }
 
     @Override
