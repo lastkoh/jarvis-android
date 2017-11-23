@@ -1,6 +1,4 @@
-package com.jarvis.speech;
-
-import android.widget.Toast;
+package com.jarvis.voice;
 
 import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
@@ -10,9 +8,10 @@ import edu.cmu.pocketsphinx.RecognitionListener;
  */
 
 public class PocketSphinxRecognitionListener implements RecognitionListener {
-    private SpeechManager mSpeechRecognizerManager;
+    private static final String TAG = PocketSphinxRecognitionListener.class.getSimpleName();
+    private VoiceManager mSpeechRecognizerManager;
 
-    public PocketSphinxRecognitionListener(SpeechManager speechRecognizerManager) {
+    public PocketSphinxRecognitionListener(VoiceManager speechRecognizerManager) {
         this.mSpeechRecognizerManager = speechRecognizerManager;
     }
 
@@ -30,11 +29,11 @@ public class PocketSphinxRecognitionListener implements RecognitionListener {
     public void onPartialResult(Hypothesis hypothesis) {
         if (hypothesis == null)
             return;
-
         String text = hypothesis.getHypstr();
-        if (text.contains(SpeechManager.KEYPHRASE)) {
-            mSpeechRecognizerManager.startDialogFlowRecognition();
+
+        if (text.contains(VoiceManager.KEYPHRASE)) {
             mSpeechRecognizerManager.getmPocketSphinxRecognizer().cancel();
+            mSpeechRecognizerManager.startDialogFlowRecognition();
         }
     }
 

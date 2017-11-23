@@ -1,10 +1,9 @@
-package com.jarvis.speech;
+package com.jarvis.voice;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import java.util.Locale;
@@ -18,9 +17,9 @@ import edu.cmu.pocketsphinx.SpeechRecognizer;
  * Created by admin on 22-Nov-17.
  */
 
-public class SpeechManager {
+public class VoiceManager {
 
-    public static final String TAG = SpeechManager.class.getSimpleName();
+    public static final String TAG = VoiceManager.class.getSimpleName();
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
     /* Named searches allow to quickly reconfigure the decoder */
@@ -34,7 +33,7 @@ public class SpeechManager {
     private AIService mAIService;
     private TextToSpeech tts;
 
-    public SpeechManager(Context context){
+    public VoiceManager(Context context){
         mContext=context;
         mDialogFlowConfig = new AIConfiguration(
                 "400beb7c88f24ff49a9e4db3b1fac6a8 ",

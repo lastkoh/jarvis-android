@@ -1,4 +1,4 @@
-package com.jarvis.speech;
+package com.jarvis.voice;
 
 import android.util.Log;
 
@@ -14,9 +14,9 @@ import ai.api.model.Result;
 public class DialogflowRecognitionListener implements AIListener {
     private static  final String TAG = DialogflowRecognitionListener.class.getSimpleName();
 
-    private SpeechManager mSpeechRecognizerManager;
+    private VoiceManager mSpeechRecognizerManager;
 
-    public DialogflowRecognitionListener(SpeechManager speechRecognizerManager){
+    public DialogflowRecognitionListener(VoiceManager speechRecognizerManager){
         this.mSpeechRecognizerManager = speechRecognizerManager;
     }
 
@@ -26,19 +26,19 @@ public class DialogflowRecognitionListener implements AIListener {
         String speech = returnResult.getFulfillment().getSpeech();
         mSpeechRecognizerManager.speak(speech);
         mSpeechRecognizerManager.getmPocketSphinxRecognizer()
-                .startListening(SpeechManager.KWS_SEARCH);
+                .startListening(VoiceManager.KWS_SEARCH);
     }
 
     @Override
     public void onError(AIError error) {
         Log.i(TAG, "Dialogflow onError: " + error.getMessage());
         mSpeechRecognizerManager.getmPocketSphinxRecognizer()
-                .startListening(SpeechManager.KWS_SEARCH);
+                .startListening(VoiceManager.KWS_SEARCH);
     }
 
     @Override
     public void onAudioLevel(float level) {
-        Log.i(TAG, "Dialogflow onAudioLevel: " + level);
+//        Log.i(TAG, "Dialogflow onAudioLevel: " + level);
     }
 
     @Override
@@ -56,3 +56,4 @@ public class DialogflowRecognitionListener implements AIListener {
         Log.i(TAG,"Dialogflow onListeningFinished");
     }
 }
+

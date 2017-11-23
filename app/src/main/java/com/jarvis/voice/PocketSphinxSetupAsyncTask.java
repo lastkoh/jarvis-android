@@ -1,4 +1,4 @@
-package com.jarvis.speech;
+package com.jarvis.voice;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,9 +15,9 @@ import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
 public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception> {
     private static final String TAG = PocketSphinxSetupAsyncTask.class.getSimpleName();
-    private final SpeechManager mSpeechRecognizerManager;
+    private final VoiceManager mSpeechRecognizerManager;
 
-    public PocketSphinxSetupAsyncTask(SpeechManager mSpeechRecognizerManager){
+    public PocketSphinxSetupAsyncTask(VoiceManager mSpeechRecognizerManager){
         this.mSpeechRecognizerManager = mSpeechRecognizerManager;
     }
 
@@ -37,15 +37,15 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
             speechRecognizerSetup.setDictionary(new File(assetDir, "cmudict-en-us.dict"));
 
             // Threshold to tune for keyphrase to balance between false alarms and misses
-            speechRecognizerSetup .setKeywordThreshold(1e-45f);
+            speechRecognizerSetup .setKeywordThreshold(1e-20f);
 
             //Creates a new SpeechRecognizer object based on previous set up.
             mSpeechRecognizerManager.setmPocketSphinxRecognizer(speechRecognizerSetup.getRecognizer());
 
             // Create keyword-activation search.
             mSpeechRecognizerManager.getmPocketSphinxRecognizer().addKeyphraseSearch(
-                    SpeechManager.KWS_SEARCH,
-                    SpeechManager.KEYPHRASE);
+                    VoiceManager.KWS_SEARCH,
+                    VoiceManager.KEYPHRASE);
 
             mSpeechRecognizerManager.getmPocketSphinxRecognizer()
                     .addListener(new PocketSphinxRecognitionListener(mSpeechRecognizerManager));
@@ -60,8 +60,7 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
         if (result != null) {
             Log.i(TAG,result.getMessage());
         } else {
-            mSpeechRecognizerManager.getmPocketSphinxRecognizer().stop();
-            mSpeechRecognizerManager.getmPocketSphinxRecognizer().startListening(SpeechManager.KWS_SEARCH);
+            mSpeechRecognizerManager.getmPocketSphinxRecognizer().startListening(VoiceManager.KWS_SEARCH);
         }
     }
 }

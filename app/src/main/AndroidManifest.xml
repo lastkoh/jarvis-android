@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".speech.SpeechService"/>
+        <service android:name=".voice.VoiceForegroundService"/>
 
         <receiver android:name=".receiver.BootReceiver">
             <intent-filter>
