@@ -3,6 +3,8 @@ package com.jarvis.voice;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.jarvis.Constants;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -37,15 +39,15 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
             speechRecognizerSetup.setDictionary(new File(assetDir, "cmudict-en-us.dict"));
 
             // Threshold to tune for keyphrase to balance between false alarms and misses
-            speechRecognizerSetup .setKeywordThreshold(1e-20f);
+            speechRecognizerSetup .setKeywordThreshold(Constants.VOICE.THRESHOLD);
 
             //Creates a new SpeechRecognizer object based on previous set up.
             mSpeechRecognizerManager.setmPocketSphinxRecognizer(speechRecognizerSetup.getRecognizer());
 
             // Create keyword-activation search.
             mSpeechRecognizerManager.getmPocketSphinxRecognizer().addKeyphraseSearch(
-                    VoiceManager.KWS_SEARCH,
-                    VoiceManager.KEYPHRASE);
+                    Constants.VOICE.KWS_SEARCH,
+                    Constants.VOICE.WAKE_UP_KEYPHRASE);
 
             mSpeechRecognizerManager.getmPocketSphinxRecognizer()
                     .addListener(new PocketSphinxRecognitionListener(mSpeechRecognizerManager));
@@ -60,7 +62,7 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
         if (result != null) {
             Log.i(TAG,result.getMessage());
         } else {
-            mSpeechRecognizerManager.getmPocketSphinxRecognizer().startListening(VoiceManager.KWS_SEARCH);
+            mSpeechRecognizerManager.pocketSphinxStartListening();
         }
     }
 }

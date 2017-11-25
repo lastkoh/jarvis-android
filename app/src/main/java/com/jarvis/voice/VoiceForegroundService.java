@@ -25,6 +25,8 @@ public class VoiceForegroundService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
+        mVoiceManager = new VoiceManager(getApplicationContext());
+        mVoiceManager.init();
     }
 
     @Nullable
@@ -38,12 +40,10 @@ public class VoiceForegroundService extends Service{
         if(intent.getAction() != null){
             switch (intent.getAction()){
                 case Constants.ACTION.STARTFOREGROUND_ACTION:
-                    mVoiceManager = new VoiceManager(getApplicationContext());
-                    mVoiceManager.start();
                     showNotification();
                     break;
                 case Constants.ACTION.STOPFOREGROUND_ACTION:
-                    mVoiceManager.destroy();
+                    mVoiceManager.shutdown();
                     stopForeground(true);
                     stopSelf();
             }
@@ -55,7 +55,7 @@ public class VoiceForegroundService extends Service{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mVoiceManager.destroy();
+        mVoiceManager.shutdown();
     }
 
     private void showNotification(){

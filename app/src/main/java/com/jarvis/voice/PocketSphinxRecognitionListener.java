@@ -1,5 +1,9 @@
 package com.jarvis.voice;
 
+import android.util.Log;
+
+import com.jarvis.Constants;
+
 import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
 
@@ -17,6 +21,7 @@ public class PocketSphinxRecognitionListener implements RecognitionListener {
 
     @Override
     public void onBeginningOfSpeech() {
+        Log.i(TAG, "onBeginningSpeech");
 
     }
 
@@ -31,9 +36,9 @@ public class PocketSphinxRecognitionListener implements RecognitionListener {
             return;
         String text = hypothesis.getHypstr();
 
-        if (text.contains(VoiceManager.KEYPHRASE)) {
-            mSpeechRecognizerManager.getmPocketSphinxRecognizer().cancel();
-            mSpeechRecognizerManager.startDialogFlowRecognition();
+        if (text.contains(Constants.VOICE.WAKE_UP_KEYPHRASE)) {
+            mSpeechRecognizerManager.pocketSphinxCancelListening();
+            mSpeechRecognizerManager.dialogFlowStartListening();
         }
     }
 
@@ -44,6 +49,7 @@ public class PocketSphinxRecognitionListener implements RecognitionListener {
 
     @Override
     public void onError(Exception e) {
+        Log.i(TAG,"onError:" + e.getMessage());
 
     }
 

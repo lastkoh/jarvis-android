@@ -25,15 +25,13 @@ public class DialogflowRecognitionListener implements AIListener {
         Result returnResult = result.getResult();
         String speech = returnResult.getFulfillment().getSpeech();
         mSpeechRecognizerManager.speak(speech);
-        mSpeechRecognizerManager.getmPocketSphinxRecognizer()
-                .startListening(VoiceManager.KWS_SEARCH);
+        mSpeechRecognizerManager.pocketSphinxStartListening();
     }
 
     @Override
     public void onError(AIError error) {
         Log.i(TAG, "Dialogflow onError: " + error.getMessage());
-        mSpeechRecognizerManager.getmPocketSphinxRecognizer()
-                .startListening(VoiceManager.KWS_SEARCH);
+        mSpeechRecognizerManager.pocketSphinxStartListening();
     }
 
     @Override

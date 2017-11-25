@@ -37,6 +37,7 @@ public class BootReceiver extends BroadcastReceiver {
                         Intent voiceForegroundService = new Intent(context, VoiceForegroundService.class);
                         voiceForegroundService.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
                         context.startService(voiceForegroundService);
+                        VoiceForegroundService.isStarted = true;
                     }
                 }
                 break;

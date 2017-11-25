@@ -6,10 +6,13 @@ import android.content.pm.PackageManager;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.content.ContextCompat;
 
+import com.jarvis.Constants;
+
 import java.util.Locale;
 
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIService;
+import ai.api.model.AIRequest;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
 
@@ -20,13 +23,6 @@ import edu.cmu.pocketsphinx.SpeechRecognizer;
 public class VoiceManager {
 
     public static final String TAG = VoiceManager.class.getSimpleName();
-    /* Used to handle permission request */
-    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
-    /* Named searches allow to quickly reconfigure the decoder */
-    public static final String KWS_SEARCH = "wakeup";
-    /* Keyword we are looking for to activate menu */
-    public static final String KEYPHRASE = "jarvis";
-
     private Context mContext;
     private SpeechRecognizer mPocketSphinxRecognizer;
     private final AIConfiguration mDialogFlowConfig;
@@ -36,7 +32,7 @@ public class VoiceManager {
     public VoiceManager(Context context){
         mContext=context;
         mDialogFlowConfig = new AIConfiguration(
-                "400beb7c88f24ff49a9e4db3b1fac6a8 ",
+                Constants.VOICE.CLIENT_ACCESS_TOKEN,
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
         mAIService = AIService.getService(mContext, mDialogFlowConfig);
@@ -51,7 +47,7 @@ public class VoiceManager {
         });
     }
 
-    public void start(){
+    public void init(){
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(mContext, Manifest.permission.RECORD_AUDIO);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
@@ -59,7 +55,15 @@ public class VoiceManager {
         }
     }
 
-    public void startDialogFlowRecognition(){
+    public void pocketSphinxStartListening(){
+        mPocketSphinxRecognizer.startListening(Constants.VOICE.KWS_SEARCH);
+    }
+
+    public void pocketSphinxCancelListening(){
+        mPocketSphinxRecognizer.cancel();
+    }
+
+    public void dialogFlowStartListening(){
         mAIService.startListening();
 //        Handler handler = new Handler();
 //        handler.postDelayed(new Runnable() {
@@ -90,7 +94,7 @@ public class VoiceManager {
         this.mContext = mContext;
     }
 
-    public void destroy(){
+    public void shutdown(){
         mPocketSphinxRecognizer.cancel();
         mPocketSphinxRecognizer.shutdown();
         mAIService.cancel();

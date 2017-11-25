@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             Intent voiceForegroundService = new Intent(getApplicationContext(), VoiceForegroundService.class);
             voiceForegroundService.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
             getApplicationContext().startService(voiceForegroundService);
+            VoiceForegroundService.isStarted = true;
         }
     }
 
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent voiceForegroundService = new Intent(getApplicationContext(), VoiceForegroundService.class);
                         voiceForegroundService.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
                         getApplicationContext().startService(voiceForegroundService);
+                        VoiceForegroundService.isStarted = true;
                     }
                 }else{
                 }
