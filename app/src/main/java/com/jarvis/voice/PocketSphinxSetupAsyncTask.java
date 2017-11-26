@@ -8,6 +8,10 @@ import com.jarvis.Constants;
 import java.io.File;
 import java.io.IOException;
 
+import ai.api.AIServiceException;
+import ai.api.model.AIEvent;
+import ai.api.model.AIRequest;
+import ai.api.model.AIResponse;
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
@@ -15,8 +19,9 @@ import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
  * Created by admin on 22-Nov-17.
  */
 
-public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception> {
+public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, AIResponse> {
     private static final String TAG = PocketSphinxSetupAsyncTask.class.getSimpleName();
+    private Exception mException;
     private final VoiceManager mSpeechRecognizerManager;
 
     public PocketSphinxSetupAsyncTask(VoiceManager mSpeechRecognizerManager){
@@ -24,9 +29,10 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
     }
 
     @Override
-    protected Exception doInBackground(Void... params) {
+    protected AIResponse doInBackground(Void... params) {
+        AIResponse response = null;
         try {
-            Assets assets = new Assets(this.mSpeechRecognizerManager.getmContext());
+            Assets assets = new Assets(mSpeechRecognizerManager.getmContext());
 
             //Performs the synchronization of assets in the application and external storage
             File assetDir = assets.syncAssets();
@@ -51,18 +57,25 @@ public class PocketSphinxSetupAsyncTask extends AsyncTask<Void, Void, Exception>
 
             mSpeechRecognizerManager.getmPocketSphinxRecognizer()
                     .addListener(new PocketSphinxRecognitionListener(mSpeechRecognizerManager));
+
+            AIRequest aiRequest = new AIRequest();
+            aiRequest.setEvent(new AIEvent(Constants.VOICE.EVENT_WELCOME));
+            response = mSpeechRecognizerManager.getmAIDataService().request(aiRequest);
         } catch (IOException e) {
-            return e;
+            mException = e;
+        } catch (AIServiceException e){
+            mException = e;
         }
-        return null;
+        return response;
     }
 
     @Override
-    protected void onPostExecute(Exception result) {
-        if (result != null) {
-            Log.i(TAG,result.getMessage());
-        } else {
+    protected void onPostExecute(AIResponse response) {
+        if (mException != null) {
+            Log.i(TAG,mException.getMessage());
+        } else if(response != null){
             mSpeechRecognizerManager.pocketSphinxStartListening();
+            mSpeechRecognizerManager.speak(response.getResult().getFulfillment().getSpeech());
         }
     }
 }

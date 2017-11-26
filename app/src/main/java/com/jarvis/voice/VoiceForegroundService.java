@@ -26,7 +26,6 @@ public class VoiceForegroundService extends Service{
     public void onCreate() {
         super.onCreate();
         mVoiceManager = new VoiceManager(getApplicationContext());
-        mVoiceManager.init();
     }
 
     @Nullable

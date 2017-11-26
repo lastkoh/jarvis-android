@@ -10,9 +10,9 @@ import com.jarvis.Constants;
 
 import java.util.Locale;
 
+import ai.api.AIDataService;
 import ai.api.android.AIConfiguration;
 import ai.api.android.AIService;
-import ai.api.model.AIRequest;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
 
@@ -20,13 +20,14 @@ import edu.cmu.pocketsphinx.SpeechRecognizer;
  * Created by admin on 22-Nov-17.
  */
 
-public class VoiceManager {
+public class VoiceManager{
 
     public static final String TAG = VoiceManager.class.getSimpleName();
     private Context mContext;
     private SpeechRecognizer mPocketSphinxRecognizer;
     private final AIConfiguration mDialogFlowConfig;
     private AIService mAIService;
+    private AIDataService mAIDataService;
     private TextToSpeech tts;
 
     public VoiceManager(Context context){
@@ -35,6 +36,7 @@ public class VoiceManager {
                 Constants.VOICE.CLIENT_ACCESS_TOKEN,
                 AIConfiguration.SupportedLanguages.English,
                 AIConfiguration.RecognitionEngine.System);
+        mAIDataService = new AIDataService(mDialogFlowConfig);
         mAIService = AIService.getService(mContext, mDialogFlowConfig);
         mAIService.setListener(new DialogflowRecognitionListener(this));
         tts = new TextToSpeech(mContext, new TextToSpeech.OnInitListener() {
@@ -42,12 +44,13 @@ public class VoiceManager {
             public void onInit(int i) {
                 if(i != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.UK);
+                    setupPocketSphinx();
                 }
             }
         });
     }
 
-    public void init(){
+    public void setupPocketSphinx(){
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(mContext, Manifest.permission.RECORD_AUDIO);
         if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
@@ -92,6 +95,22 @@ public class VoiceManager {
 
     public void setmContext(Context mContext) {
         this.mContext = mContext;
+    }
+
+    public AIService getmAIService() {
+        return mAIService;
+    }
+
+    public void setmAIService(AIService mAIService) {
+        this.mAIService = mAIService;
+    }
+
+    public AIDataService getmAIDataService() {
+        return mAIDataService;
+    }
+
+    public void setmAIDataService(AIDataService mAIDataService) {
+        this.mAIDataService = mAIDataService;
     }
 
     public void shutdown(){
