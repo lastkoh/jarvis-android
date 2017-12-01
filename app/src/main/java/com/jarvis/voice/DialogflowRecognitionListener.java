@@ -25,7 +25,7 @@ public class DialogflowRecognitionListener implements AIListener {
         Result returnResult = result.getResult();
         String speech = returnResult.getFulfillment().getSpeech();
         mSpeechRecognizerManager.speak(speech);
-        mSpeechRecognizerManager.pocketSphinxStartListening();
+        mSpeechRecognizerManager.dialogFlowStartListening();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.content.ContextCompat;
 
 import com.jarvis.Constants;
@@ -59,6 +60,7 @@ public class VoiceManager{
     }
 
     public void pocketSphinxStartListening(){
+        isTtsSpekaing();
         mPocketSphinxRecognizer.startListening(Constants.VOICE.KWS_SEARCH);
     }
 
@@ -67,18 +69,20 @@ public class VoiceManager{
     }
 
     public void dialogFlowStartListening(){
+        isTtsSpekaing();
         mAIService.startListening();
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mAIService.stopListening();
-//            }
-//        }, 10000);
     }
 
     public void speak(String response){
         tts.speak(response, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    private void isTtsSpekaing(){
+        while(true){
+            if(!tts.isSpeaking()){
+                return;
+            }
+        }
     }
 
     public SpeechRecognizer getmPocketSphinxRecognizer() {
